@@ -17,21 +17,31 @@ func main() {
 	// Conectar a la base de datos
 	repository.ConnectDB()
 
-	// Migrar modelos
-	repository.DB.AutoMigrate(&models.Alquimista{}, &models.Transmutation{})
+	// Migrar todos los modelos
+	repository.DB.AutoMigrate(
+		&models.Alquimista{},
+		&models.Transmutation{},
+		&models.Mission{}, // 🧩 Nuevo modelo de misiones/experimentos
+	)
 
 	// Configurar el router
 	r := mux.NewRouter()
 
-	// Rutas de transmutaciones
+	// ---------- RUTAS EXISTENTES ----------
+	// Transmutaciones
 	r.HandleFunc("/transmutaciones", handlers.GetTransmutaciones).Methods("GET")
 	r.HandleFunc("/transmutaciones", handlers.CreateTransmutation).Methods("POST")
 
-	// Rutas de alquimistas
+	// Alquimistas
 	r.HandleFunc("/alquimistas", handlers.GetAlquimistas).Methods("GET")
 	r.HandleFunc("/alquimistas", handlers.CreateAlquimista).Methods("POST")
 
-	// Ruta de health check
+	// ---------- NUEVAS RUTAS: Experimentos/Misiones ----------
+	r.HandleFunc("/api/misiones", handlers.ListarMisiones).Methods("GET")
+	r.HandleFunc("/api/misiones", handlers.CrearMision).Methods("POST")
+	r.HandleFunc("/api/misiones/{id}", handlers.ActualizarEstadoMision).Methods("PUT")
+
+	// Health check
 	r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	}).Methods("GET")

@@ -1,23 +1,21 @@
-// backend/internal/models/mission.go
 package models
 
-import "time"
+import (
+	"time"
 
-type MissionStatus string
-
-const (
-	MissionOpen       MissionStatus = "open"
-	MissionClosed     MissionStatus = "closed"
-	MissionInProgress MissionStatus = "in_progress"
+	"gorm.io/gorm"
 )
 
 type Mission struct {
-	ID            uint          `gorm:"primaryKey" json:"id"`
-	Titulo        string        `json:"titulo"`
-	Descripcion   string        `json:"descripcion"`
-	SolicitanteID uint          `json:"solicitante_id"`
-	Solicitante   User          `gorm:"foreignKey:SolicitanteID"`
-	Status        MissionStatus `json:"status"`
-	CreatedAt     time.Time     `json:"created_at"`
-	UpdatedAt     time.Time     `json:"updated_at"`
+	gorm.Model
+	Titulo        string     `json:"titulo"`
+	Descripcion   string     `json:"descripcion"`
+	Prioridad     string     `json:"prioridad"` // baja, media, alta
+	AlquimistaID  uint       `json:"alquimista_id"`
+	Alquimista    Alquimista `json:"alquimista" gorm:"foreignKey:AlquimistaID"`
+	Materiales    string     `json:"materiales"` // lista separada por comas o JSON
+	Estado        string     `json:"estado"`     // pendiente, en progreso, completada, rechazada
+	InformeFinal  string     `json:"informe_final"`
+	FechaCreacion time.Time  `json:"fecha_creacion"`
+	FechaCierre   *time.Time `json:"fecha_cierre"`
 }

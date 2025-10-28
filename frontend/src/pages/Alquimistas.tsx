@@ -16,7 +16,6 @@ export default function Alquimistas() {
   const [especialidad, setEspecialidad] = useState("");
   const [mensaje, setMensaje] = useState("");
 
-  // 🔹 Cargar lista al inicio
   const cargarAlquimistas = () => {
     api
       .get("/alquimistas")
@@ -28,7 +27,6 @@ export default function Alquimistas() {
     cargarAlquimistas();
   }, []);
 
-  // 🔹 Crear un nuevo alquimista
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nombre || !rango || !especialidad) {
@@ -42,7 +40,7 @@ export default function Alquimistas() {
       setNombre("");
       setRango("");
       setEspecialidad("");
-      cargarAlquimistas(); // recargar lista
+      cargarAlquimistas();
     } catch (error) {
       console.error(error);
       setMensaje("❌ Error al agregar alquimista");
@@ -50,86 +48,101 @@ export default function Alquimistas() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-3xl font-bold mb-4 text-green-700">Alquimistas</h2>
+    <div className="p-8 animate-fadeIn">
+      <h1 className="text-4xl font-bold mb-6 text-emerald-700 text-center">
+        🧙‍♂️ Registro de Alquimistas
+      </h1>
 
-      {/* Mensaje de estado */}
-      {mensaje && <p className="mb-4 text-center text-sm text-gray-700">{mensaje}</p>}
+      {mensaje && (
+        <div className="mb-6 text-center text-sm font-medium text-gray-700 bg-amber-50 border border-amber-200 py-2 rounded-md shadow-sm">
+          {mensaje}
+        </div>
+      )}
 
-      {/* 🔹 Formulario */}
+      {/* Formulario */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-4 mb-6 max-w-md mx-auto border border-gray-200"
+        className="bg-white shadow-lg rounded-2xl p-6 mb-10 max-w-lg mx-auto border border-emerald-200 transition hover:shadow-2xl"
       >
-        <h3 className="text-lg font-semibold mb-3 text-gray-700">Agregar nuevo alquimista</h3>
+        <h3 className="text-lg font-semibold mb-4 text-emerald-800">
+          ✨ Agregar nuevo alquimista
+        </h3>
 
-        <div className="mb-2">
+        <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Nombre</label>
           <input
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none"
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Rango</label>
           <input
             type="text"
             value={rango}
             onChange={(e) => setRango(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none"
           />
         </div>
 
-        <div className="mb-3">
+        <div className="mb-6">
           <label className="block text-sm font-medium mb-1">Especialidad</label>
           <input
             type="text"
             value={especialidad}
             onChange={(e) => setEspecialidad(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-emerald-400 focus:outline-none"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition"
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg transition-all duration-300"
         >
           Agregar Alquimista
         </button>
       </form>
 
-      {/* 🔹 Tabla de alquimistas */}
-      <table className="w-full border-collapse border border-gray-300">
-        <thead className="bg-green-100">
-          <tr>
-            <th className="border border-gray-300 p-2">ID</th>
-            <th className="border border-gray-300 p-2">Nombre</th>
-            <th className="border border-gray-300 p-2">Rango</th>
-            <th className="border border-gray-300 p-2">Especialidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          {alquimistas.length > 0 ? (
-            alquimistas.map((a) => (
-              <tr key={a.id} className="text-center hover:bg-gray-50">
-                <td className="border border-gray-300 p-2">{a.id}</td>
-                <td className="border border-gray-300 p-2">{a.nombre}</td>
-                <td className="border border-gray-300 p-2">{a.rango}</td>
-                <td className="border border-gray-300 p-2">{a.especialidad}</td>
-              </tr>
-            ))
-          ) : (
+      {/* Tabla */}
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-emerald-100">
             <tr>
-              <td colSpan={4} className="border border-gray-300 p-4 text-center text-gray-500">
-                No hay alquimistas disponibles
-              </td>
+              <th className="border border-gray-300 p-2">ID</th>
+              <th className="border border-gray-300 p-2">Nombre</th>
+              <th className="border border-gray-300 p-2">Rango</th>
+              <th className="border border-gray-300 p-2">Especialidad</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {alquimistas.length > 0 ? (
+              alquimistas.map((a) => (
+                <tr
+                  key={a.id}
+                  className="text-center hover:bg-emerald-50 transition duration-200"
+                >
+                  <td className="border border-gray-300 p-2">{a.id}</td>
+                  <td className="border border-gray-300 p-2">{a.nombre}</td>
+                  <td className="border border-gray-300 p-2">{a.rango}</td>
+                  <td className="border border-gray-300 p-2">{a.especialidad}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="border border-gray-300 p-4 text-center text-gray-500"
+                >
+                  No hay alquimistas registrados
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
